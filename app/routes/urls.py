@@ -1,7 +1,12 @@
-from routes.views import Hello
+from routes.views import RouteView, Register
 
-hello_url = {
-    'rule': '/hello',
-    'view_func': Hello.as_view('Hello'),
-    'methods': ['GET', 'POST']
-}
+urls = [{
+            'rule': '/routes',
+            'view_func': RouteView.as_view('routes'),
+            'methods': ['GET', 'POST']
+        },
+        {
+            'rule': '/register',
+            'view_func': Register.as_view('register'),
+            'methods': ['POST', 'GET']
+        }]
