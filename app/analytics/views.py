@@ -7,12 +7,14 @@ from api import analytic_model
 
 analytics_namespace = Namespace('analytics', description='Получение аналитики пользователя')
 
-@analytics_namespace.route('/analytics')
+@analytics_namespace.route('')
 class AnalyticsView(MethodView):
 
     @analytics_namespace.expect(analytic_model)
     @analytics_namespace.doc(params={'userid': {'description': 'ID пользователя', 'in': 'query', 'type': 'integer'},
                                      'day_of_week': {'description': 'число от 0 до 6, где 0 — воскресенье, 6 — суббота', 'in': 'query', 'type': 'integer'}})
+    @analytics_namespace.response(200, 'Получение данных')
+    @analytics_namespace.response(500, 'Непредвиденные ошибки')
     def get(self):
 
         """

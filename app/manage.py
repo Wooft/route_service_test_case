@@ -2,7 +2,7 @@ from flask import Flask
 from urls import urls
 from api import api
 from users.views import ns
-from routes.views import ns_routes
+from routes.views import ns_routes, set_routes
 from analytics.views import analytics_namespace
 
 app = Flask('app')
@@ -12,6 +12,7 @@ api.init_app(app)
 api.add_namespace(ns)
 api.add_namespace(ns_routes)
 api.add_namespace(analytics_namespace)
+api.add_namespace(set_routes)
 
 
 for url in urls:

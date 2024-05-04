@@ -13,6 +13,7 @@ from flask_restx import Namespace
 import requests
 
 ns_routes = Namespace('routes', description='Создание, изменение, получение маршрутов')
+set_routes = Namespace('set_end_time', description='Установка времени окончания маршрута')
 
 
 def get_route(coordinates):
@@ -56,7 +57,7 @@ def get_route(coordinates):
         'distance': response.json()['features'][0]['properties']['summary']['distance'],
     }
     return route_data
-@ns_routes.route('/routes')
+@ns_routes.route('')
 class RouteView(MethodView):
     @ns_routes.expect(routes_model)
     @ns_routes.doc(params={'userid': {'description': 'ID пользователя', 'in': 'query', 'type': 'integer'}})
@@ -131,7 +132,7 @@ class RouteView(MethodView):
         except Exception as exc:
             return jsonify({'error': 'Unexpected error', 'details': str(exc)}), 500
 
-@ns_routes.route('/set_end_time', endpoint='swagger_set_end_time')
+@set_routes.route('')
 class SetEndTime(MethodView):
 
     @ns_routes.expect(routes_model)

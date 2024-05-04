@@ -15,7 +15,7 @@ routes_model = api.model('Routes', {
     'id': fields.Integer(required=True, description='ID пользователя'),
     'start_time': fields.DateTime(required=False, description='Время начала маршрута'),
     'duration': fields.Float(required=False, description='Продолжительность маршрута (в секундах)'),
-    'user_id': fields.Nested(model=user_model, required=False, description='ID пользователя, создавшего маршрут. Вторичный ключ модели User'),
+    'user_id': fields.Integer(required=False, description='ID пользователя, создавшего маршрут. Вторичный ключ модели User'),
     'name': fields.String(required=False, description='Название маршрута'),
     'route_points': fields.String(required=True, description='Список координат точек маршрута'),
     'end_time': fields.DateTime(required=True, description='Время окончания маршрута'),
