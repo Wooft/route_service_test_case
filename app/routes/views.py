@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from flask.views import MethodView
 from flask import jsonify, request
 from pydantic_core._pydantic_core import ValidationError
@@ -49,7 +47,6 @@ def get_route(coordinates):
     response = requests.post(url=f'https://api.openrouteservice.org/v2/directions/foot-hiking/geojson',
                              headers=headers,
                              json=body)
-    pprint(response.json())
     route_data = {
         'duration': response.json()['features'][0]['properties']['summary']['duration'],
         'route_points': response.json()['features'][0]['geometry']['coordinates'],
@@ -57,7 +54,7 @@ def get_route(coordinates):
         'distance': response.json()['features'][0]['properties']['summary']['distance'],
     }
     return route_data
-@ns_routes.route('')
+@ns_routes.route('/routes')
 class RouteView(MethodView):
     @ns_routes.expect(routes_model)
     @ns_routes.doc(params={'userid': {'description': 'ID пользователя', 'in': 'query', 'type': 'integer'}})
@@ -132,7 +129,7 @@ class RouteView(MethodView):
         except Exception as exc:
             return jsonify({'error': 'Unexpected error', 'details': str(exc)}), 500
 
-@set_routes.route('')
+@set_routes.route('/set_end_time')
 class SetEndTime(MethodView):
 
     @ns_routes.expect(routes_model)

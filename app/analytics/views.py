@@ -7,7 +7,7 @@ from api import analytic_model
 
 analytics_namespace = Namespace('analytics', description='Получение аналитики пользователя')
 
-@analytics_namespace.route('')
+@analytics_namespace.route('/analytics')
 class AnalyticsView(MethodView):
 
     @analytics_namespace.expect(analytic_model)

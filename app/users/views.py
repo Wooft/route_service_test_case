@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 ns = Namespace('authentication', description='Регистрация пользователей')
 
 
-@ns.route('')
+@ns.route('/authentication')
 class Register(MethodView):
     @ns.expect(user_model)
     @ns.response(201, 'Пользователь создан')
