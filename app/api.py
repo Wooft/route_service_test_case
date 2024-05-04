@@ -20,3 +20,8 @@ routes_model = api.model('Routes', {
     'route_points': fields.String(required=True, description='Список координат точек маршрута'),
     'end_time': fields.DateTime(required=True, description='Время окончания маршрута'),
 })
+
+analytic_model = api.model('Analytics', {
+    'average_deviation': fields.Float(description='Среднее отклонение времени в пути'),
+    'total_distance': fields.Float(description='Пройденное пользователем расстояние'),
+})

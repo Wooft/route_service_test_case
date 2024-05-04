@@ -3,7 +3,7 @@ from decouple import config
 from sqlalchemy import Column, String, Integer, DateTime, create_engine, JSON, ForeignKey, Float
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-PG_DSN = f"postgresql://{config('DB_USER')}:{config('DB_PASSWORD')}@db/{config('DB_NAME')}"
+PG_DSN = f"postgresql://{config('DB_USER')}:{config('DB_PASSWORD')}@127.0.0.1/{config('DB_NAME')}"
 engine = create_engine(PG_DSN)
 Session = sessionmaker(engine)
 atexit.register(engine.dispose)
@@ -33,6 +33,7 @@ class Routes(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     name = Column(String, nullable=True)
     route_points = Column(JSON)
+    distance = Column(Float)
     end_time = Column(DateTime)
 
     @property
@@ -41,6 +42,7 @@ class Routes(Base):
             'id': self.id,
             'name': self.name,
             'duration': self.duration,
+            'distance': self.distance,
             'route': self.route_points,
             'start_time': self.start_time,
             'end_time': self.end_time

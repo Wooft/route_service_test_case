@@ -1,5 +1,6 @@
 from users.views import Register
 from routes.views import RouteView, SetEndTime
+from analytics.views import AnalyticsView
 
 urls = [
         {
@@ -16,5 +17,10 @@ urls = [
             'rule': '/set_end_time',
             'view_func': SetEndTime.as_view('end_time'),
             'methods': ['PATCH',]
+        },
+        {
+            'rule': '/analytics',
+            'view_func': AnalyticsView.as_view('analytics'),
+            'methods': ['GET', ]
         }
 ]

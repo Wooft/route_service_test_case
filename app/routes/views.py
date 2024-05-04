@@ -1,5 +1,7 @@
+from pprint import pprint
+
 from flask.views import MethodView
-from flask import jsonify, request, Response
+from flask import jsonify, request
 from pydantic_core._pydantic_core import ValidationError
 from sqlalchemy.exc import IntegrityError
 from database import Session, Routes
@@ -46,10 +48,12 @@ def get_route(coordinates):
     response = requests.post(url=f'https://api.openrouteservice.org/v2/directions/foot-hiking/geojson',
                              headers=headers,
                              json=body)
+    pprint(response.json())
     route_data = {
         'duration': response.json()['features'][0]['properties']['summary']['duration'],
         'route_points': response.json()['features'][0]['geometry']['coordinates'],
-        'start_at': response.json()['metadata']['timestamp']
+        'start_at': response.json()['metadata']['timestamp'],
+        'distance': response.json()['features'][0]['properties']['summary']['distance'],
     }
     return route_data
 @ns_routes.route('/routes')
@@ -90,14 +94,31 @@ class RouteView(MethodView):
     @ns_routes.response(201, 'Маршрут  создан')
     @ns_routes.response(500, 'Другие ошибки')
     def post(self):
+        """
+        Создает новый маршрут на основании предоставленных данных.
+
+        Принимает JSON-запрос с данными маршрута, валидирует их, после чего выполняет запрос к
+        внешнему сервису для получения дополнительной информации о маршруте. С полученными данными
+        создает новую запись в базе данных и возвращает информацию о созданном маршруте.
+
+        Входные данные JSON должны содержать:
+            - userid (int): Идентификатор пользователя, создающего маршрут.
+            - name (str): Название маршрута.
+            - coordinates (list[list[float]]): Список координат маршрута в формате [[широта, долгота], ...].
+
+        В случае успеха возвращает:
+            - Response: Объект ответа Flask с JSON представлением созданного маршрута и статусом 201.
+        """
         try:
             route_data = RouteValidator(**request.json)
             route = get_route(route_data.coordinates)
+            print(route)
             new_route = Routes(user_id=route_data.userid,
                                name=route_data.name,
                                duration = route['duration'],
                                start_time=datetime.fromtimestamp(route['start_at'] / 1e3),
-                               route_points={'route_points': route['route_points']})
+                               route_points={'route_points': route['route_points']},
+                               distance = route['distance'])
             with Session() as session:
                 session.add(new_route)
                 session.commit()
@@ -112,19 +133,7 @@ class RouteView(MethodView):
 
 @ns_routes.route('/set_end_time', endpoint='swagger_set_end_time')
 class SetEndTime(MethodView):
-    """
-    Обновляет время окончания маршрута для заданного маршрута и пользователя.
 
-    Этот метод принимает JSON-запрос с идентификатором маршрута и идентификатором пользователя,
-    валидирует их, и, если данные корректны, обновляет время окончания маршрута в базе данных на текущее время.
-
-    Входные данные JSON должны содержать:
-        - routeid (int): Уникальный идентификатор маршрута.
-        - userid (int): Идентификатор пользователя, который запрашивает обновление.
-
-    В случае успеха возвращает:
-        - Response: Объект ответа Flask с JSON, содержащим обновленное время окончания маршрута и статусом 200.
-    """
     @ns_routes.expect(routes_model)
     @ns_routes.response(200, 'Время добавлено')
     @ns_routes.response(400, 'Ошибка валидации данных')
@@ -134,6 +143,19 @@ class SetEndTime(MethodView):
     @ns_routes.doc(params={'routeid': {'description': 'ID маршрута', 'in': 'query', 'type': 'integer'},
                            'userid': {'description': 'ID пользователя', 'in': 'query', 'type': 'integer'}})
     def patch(self):
+        """
+        Обновляет время окончания маршрута для заданного маршрута и пользователя.
+
+        Этот метод принимает JSON-запрос с идентификатором маршрута и идентификатором пользователя,
+        валидирует их, и, если данные корректны, обновляет время окончания маршрута в базе данных на текущее время.
+
+        Входные данные JSON должны содержать:
+            - routeid (int): Уникальный идентификатор маршрута.
+            - userid (int): Идентификатор пользователя, который запрашивает обновление.
+
+        В случае успеха возвращает:
+            - Response: Объект ответа Flask с JSON, содержащим обновленное время окончания маршрута и статусом 200.
+        """
         try:
             data = EndTimeValidator(**request.json)
             with Session() as session:
