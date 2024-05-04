@@ -1,13 +1,22 @@
 from flask import Flask
-from app.routes.urls import urls
-from flask_login import LoginManager
+from urls import urls
+from api import api
+from users.views import ns
+from routes.views import ns_routes
 
 app = Flask('app')
+
+
+api.init_app(app)
+api.add_namespace(ns)
+api.add_namespace(ns_routes)
+
 
 for url in urls:
     app.add_url_rule(rule=url['rule'],
                      view_func=url['view_func'],
                      methods=url['methods'])
 
+
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='0.0.0.0', port=5000)
