@@ -10,8 +10,8 @@ from api import api, routes_model
 from flask_restx import Namespace
 import requests
 
-ns_routes = Namespace('routes', description='Создание, изменение, получение маршрутов')
-set_routes = Namespace('set_end_time', description='Установка времени окончания маршрута')
+ns_routes = Namespace('/routes', description='Создание, изменение, получение маршрутов')
+set_routes = Namespace('/set_end_time', description='Установка времени окончания маршрута')
 
 
 def get_route(coordinates):

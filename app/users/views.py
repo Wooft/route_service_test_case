@@ -8,7 +8,7 @@ from flask_restx import Namespace
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
-ns = Namespace('authentication', description='Регистрация пользователей')
+ns = Namespace('/register', description='Регистрация пользователей')
 
 
 @ns.route('/authentication')
