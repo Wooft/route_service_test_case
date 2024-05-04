@@ -3,7 +3,7 @@ from decouple import config
 from sqlalchemy import Column, String, Integer, DateTime, create_engine, JSON, ForeignKey, Float
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-PG_DSN = f"postgresql://{config('DB_USER')}:{config('DB_PASSWORD')}@127.0.0.1/{config('DB_NAME')}"
+PG_DSN = f"postgresql://{config('DB_USER')}:{config('DB_PASSWORD')}@{config('DB_HOST')}/{config('DB_NAME')}"
 engine = create_engine(PG_DSN)
 Session = sessionmaker(engine)
 atexit.register(engine.dispose)
