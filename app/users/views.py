@@ -45,7 +45,7 @@ class Register(MethodView):
                 session.add(new_user)
                 session.commit()
 
-                return jsonify({'data': new_user.username}), 201
+                return jsonify({'data': new_user.username, 'id': new_user.id}), 201
 
         except ValidationError as val_err:
             return jsonify({'error': 'Validation error', 'details': str(val_err.errors()[0]['msg'])}), 400

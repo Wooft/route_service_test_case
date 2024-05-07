@@ -22,6 +22,8 @@ routes_model = api.model('Routes', {
 })
 
 analytic_model = api.model('Analytics', {
-    'average_deviation': fields.Float(description='Среднее отклонение времени в пути'),
-    'total_distance': fields.Float(description='Пройденное пользователем расстояние'),
+    'average_deviation': fields.Float(description='Среднее отклонение времени в пути (секунды)'),
+    'total_distance': fields.Float(description='Пройденное расстояние (метры)'),
+    'total_time': fields.Float(description='Общее потраченное время (секунды)'),
+    'avg_speed': fields.Float(description='Средняя скорость (метры / секунды)'),
 })
