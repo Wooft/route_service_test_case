@@ -37,3 +37,4 @@
 - Регистрация пользователей: http://localhost/register
 - Создание маршрутов и получение списка маршрутов пользователя: http://localhost/routes
 - Добавление времени окончания маршрута: http://localhost/set_end_time
+- Получение данных аналитики пользователя: http://localhost/analytics
